@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+export ECO_ROOT=$PWD/Ecosystem/ecosystem
+export ECO_ENV=$PWD/env
+
+python $PWD/Ecosystem/ecorun.py -t base,Qt.py,maya2017,spaceSwitcher1.0.0 -r maya
