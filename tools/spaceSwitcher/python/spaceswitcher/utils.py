@@ -92,6 +92,7 @@ def bake_animation(channels, start, end):
     if suspend:
         refresh(suspend=False)
 
+
 def get_pynodes(nodes, nodetype=None):
     if nodes is None:
         return None
