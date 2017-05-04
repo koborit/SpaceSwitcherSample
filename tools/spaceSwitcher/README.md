@@ -63,15 +63,19 @@ For engineers and technical artists, python script interface is also available.
 **`spaceswitcher`**  
 Portal module for main class and functions, designed to be the interface, i.e. the only module that the users of this tool need to import.  
 Their actual implementation is split into sub modules below.
+
 ----  
 **`spaceswitcher.core`**  
 Sub module for main class and functions implementation except for UI.
+
 ----
 **`spaceswitcher.ui`**  
 Sub module for UI implementation.
+
 ----
 **`spaceswitcher.utils`**  
 Sub module for implementation of basic utility functions used by modules above.
+
 ----
 
 ### Class
@@ -167,12 +171,12 @@ get_bakerange_from_locator(locator)
 * Description:  
     Obtains bake framerange from values stored in constraint locator ***locator***'s custom attributes and returns as a dictionary with keys and values shown below:  
 
-      key                      | value                          | type
-      ------------------------ | ------------------------------ | -----
-      `spaceSwitcherStartInit` | `True` if start is initialized | `bool`
-      `spaceSwitcherStart`     | bake start frame               | `int`
-      `spaceSwitcherEndInit`   | `True` if end is initialized   | `bool`
-      `spaceSwitcherEnd`       | bake end frame                 | `int`
+      key                    | value                        | type
+      ---------------------- | ---------------------------- | ----
+      spaceSwitcherStartInit | True if start is initialized | bool
+      spaceSwitcherStart     | bake start frame             | int
+      spaceSwitcherEndInit   | True if end is initialized   | bool
+      spaceSwitcherEnd       | bake end frame               | int
 
 ----
 
@@ -315,7 +319,8 @@ spaceswitcher.switch_space(targets, parent,
 ----
 
 ```python
-spaceswitcher.delete_switch_space_constraints(targets=None, locators=None, bake=False, start=None, end=None)
+spaceswitcher.delete_switch_space_constraints(targets=None, locators=None,
+                                              bake=False, start=None, end=None)
 ```
 
 * Parameters:
