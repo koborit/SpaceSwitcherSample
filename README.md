@@ -1,6 +1,6 @@
-# **Maya Tool: ** _**Space Swithcer**_ **Sample**
+# Maya Tool: _**Space Swithcer**_ Sample
 
-**Maya Tool: ** _**Space Switcher**_ **Sample** is Autodesk Maya environment where simple animator's tool _**spaceSwitcher**_ can be tested.
+Maya Tool: _**Space Switcher**_ Sample is Autodesk Maya environment where simple animator's tool _**spaceSwitcher**_ can be tested.
 
 ## Supported Platforms:
 * Autodesk Maya and its supported platforms.
