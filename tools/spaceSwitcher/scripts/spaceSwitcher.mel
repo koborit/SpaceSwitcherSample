@@ -1,0 +1,4 @@
+global proc spaceSwitcher()
+{
+	python("import spaceswitcher\nspaceswitcher.launch_ui()\n");
+}
