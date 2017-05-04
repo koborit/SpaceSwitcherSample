@@ -171,12 +171,12 @@ get_bakerange_from_locator(locator)
 * Description:  
     Obtains bake framerange from values stored in constraint locator ***locator***'s custom attributes and returns as a dictionary with keys and values shown below:  
 
-      key                    | value                        | type
-      ---------------------- | ---------------------------- | ----
-      spaceSwitcherStartInit | True if start is initialized | bool
-      spaceSwitcherStart     | bake start frame             | int
-      spaceSwitcherEndInit   | True if end is initialized   | bool
-      spaceSwitcherEnd       | bake end frame               | int
+    | key                      | value                          | type   |
+    | :----------------------: | :----------------------------: | :----: |
+    | `spaceSwitcherStartInit` | `True` if start is initialized | `bool` |
+    | `spaceSwitcherStart`     | bake start frame               | `int`  |
+    | `spaceSwitcherEndInit`   | `True` if end is initialized   | `bool` |
+    | `spaceSwitcherEnd`       | bake end frame                 | `int`  |
 
 ----
 
