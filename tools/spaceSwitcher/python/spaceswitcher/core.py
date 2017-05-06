@@ -20,6 +20,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Documentation
+
+Sub module for main class and functions implementation except for UI.
+
 """
 
 
@@ -34,6 +39,13 @@ from . import utils
 
 
 class SpaceSwitcher(object):
+    """
+    This class encapsulates constraint structure of a target controller and a
+    transform which works as temporary "parent".
+    Operations such as creating or deleting constraints with or without
+    keyframe bake are accessible via instance methods.
+    """
+
     locator_prefix = 'cnst_'
 
     locator_target_attrname = 'spaceSwitcherTarget'
@@ -48,6 +60,18 @@ class SpaceSwitcher(object):
 
     @classmethod
     def get_target_from_locator(cls, locator):
+        """
+        Parameters:
+            locator: pymel.core.general.PyNode
+                Constraint locator.
+
+        Return value:
+            Target transform node. pymel.core.general.PyNode
+
+        Description:
+            Obtains target transform from constraint locator.
+        """
+
         if not isinstance(locator, nodetypes.Transform):
             return None
         try:
@@ -64,6 +88,18 @@ class SpaceSwitcher(object):
 
     @classmethod
     def get_locator_from_target(cls, target):
+        """
+        Parameters:
+            target: pymel.core.general.PyNode
+                Target transform.
+
+        Return value:
+            Constraint locator node. pymel.core.general.PyNode
+
+        Description:
+            Obtains constraint locator from target.
+        """
+
         if not isinstance(target, nodetypes.Transform):
             return None
         try:
@@ -82,6 +118,26 @@ class SpaceSwitcher(object):
 
     @classmethod
     def get_bakerange_from_locator(cls, locator):
+        """
+        Parameters:
+            locator: pymel.core.general.PyNode
+                Constraint locator.
+
+        Return value:
+            A dictionary containing bake range information. dict
+
+        Description:
+            Obtains bake framerange from values stored in constraint locator's
+            custom attributes and returns as a dictionary with keys and values
+            shown below:
+
+                spaceSwitcherStartInit : True if start is initialized (bool)
+                spaceSwitcherStart     : bake start frame             (int)
+                spaceSwitcherEndInit   : True if end is initialized   (bool)
+                spaceSwitcherEnd       : bake end frame               (int)
+
+        """
+
         if not isinstance(locator, nodetypes.Transform):
             return {}
 
@@ -118,6 +174,34 @@ class SpaceSwitcher(object):
         return result
 
     def __init__(self, target=None, locator=None):
+        """
+        Parameters:
+            target: pymel.core.general.PyNode
+                Target transform node you are animating.
+            locator: pymel.core.general.PyNode
+                Constraint locator node which drives target transform via
+                point constraint and orientation constraint.
+
+        For a new constraint structure, a class instance must be constructed
+        with a target node before creating constraints:
+
+        switcher = spaceswitcher.SpaceSwitcher(target=target)
+
+        From an existing constraint structure, a class instance can be
+        constructed and restored with a target node and/or a
+        constraint locator:
+
+        switcher = spaceswitcher.SpaceSwitcher(target=target)
+
+        or
+
+        switcher = spaceswitcher.SpaceSwitcher(locator=locator)
+
+        or
+
+        switcher = spaceswitcher.SpaceSwitcher(target=target, locator=locator)
+        """
+
         # target: target transform
         self.target = None
 
@@ -216,6 +300,19 @@ class SpaceSwitcher(object):
                                                        local_scale * scale_z)
 
     def list_target_constraints(self, typ):
+        """
+        Parameters:
+            typ: unicode
+                Constraint type. 'translate' or 'rotate' can be accepted.
+
+        Return value:
+            A list of constraint nodes. list of pymel.core.general.PyNode
+
+        Description:
+            Obtains constraint nodes which drive the target node's attributes
+            which typ specifies.
+        """
+
         if not self.target or not self.locator:
             return []
 
@@ -242,6 +339,19 @@ class SpaceSwitcher(object):
         return list(constraints)
 
     def list_driven_target_channels(self, typ):
+        """
+        Parameters:
+            typ: unicode
+                Constraint type. 'translate' or 'rotate' can be accepted.
+
+        Return value:
+            A list of driven attributes. list of pymel.core.general.Attribute
+
+        Description:
+            Obtains component attributes of target node's typ attribute which
+            are really driven by constraint locator.
+        """
+
         if not self.target or not self.locator:
             return []
 
@@ -318,6 +428,38 @@ class SpaceSwitcher(object):
             orientConstraint([self.locator], [self.target], maintainOffset=True, skip=skip_list)
 
     def switch_space(self, parent, translate_switches, rotate_switches, bake=False, start=1, end=24):
+        """
+        Parameters:
+            parent: pymel.core.general.PyNode
+                A transform node which you want make serve as
+                temporary parent.
+            translate_switches: [bool, bool, bool]
+                Translate constraint switch for x, y and z
+                component respectively.
+            rotate_switches: [bool, bool, bool]
+                Rotate constraint switch for x, y and z
+                component respectively.
+            bake: bool
+                If True, keyframes are baked to constraint locator so that
+                target's animation is kept the same after constraints
+                are made.
+            start: int
+                Start frame of keyframe bake.
+            end: int
+                End frame of keyframe bake.
+
+        Return value:
+            Constraint locator, which is created to constrain the target node.
+            pymel.core.general.PyNode
+
+        Description:
+            Creates a new locator under parent as the constraint locator and
+            constraint nodes which drive the target node, according to
+            translate_switches and rotate_switches channel settings.
+            If bake is True, keyframes are baked to constraint locator so that
+            target's animation is kept the same after constraints are made.
+        """
+
         if self.target is None:
             error('Target to switch space is not set yet.')
 
@@ -358,6 +500,33 @@ class SpaceSwitcher(object):
         return self.locator
 
     def delete_constraints(self, bake=False, start=None, end=None):
+        """
+        Parameters:
+            bake: bool
+                If True, the resultant animation is baked to the target node
+                before constraints are deleted.
+            start: NoneType or int
+                Start frame of keyframe bake. If None is specified,
+                start frame is obtained from the value stored in locator's
+                custom attribute.
+                A specific integer value can be used to override the start
+                frame stored as custom attribute.
+            end: NoneType or int
+                End frame of keyframe bake. If None is specified, end frame is
+                obtained from the value stored in locator's custom attribute.
+                A specific integer value can be used to override the end frame
+                stored as custom attribute.
+
+        Return value:
+            The target node. pymel.core.general.PyNode
+
+        Description:
+            Deletes the constraint locator and constraint nodes which drive
+            the target.
+            If bake is True, the resultant animation is baked to the target
+            node before constraint structure is deleted.
+        """
+
         if bake:
             channels = self.list_driven_target_channels('translate') + self.list_driven_target_channels('rotate')
             if channels:
@@ -399,6 +568,42 @@ class SpaceSwitcher(object):
 
 def switch_space(targets, parent, translate_switches=[True, True, True], rotate_switches=[True, True, True],
                  bake=False, start=1, end=24):
+    """
+    Parameters:
+        targets: list of PyNode or PyNode or list of unicode or unicode or
+                 NoneType
+            Target transform node(s).
+            If None is specified, current selection is used as targets.
+        parent: PyNode or unicode
+            A transform node which you want to make serve as temporary parent.
+        translate_switches: [bool, bool, bool]
+            Translate constraint switch for x, y and z component respectively.
+        rotate_switches: [bool, bool, bool]
+            Rotate constraint switch for x, y and z component respectively.
+        bake : bool
+            If True, keyframes are baked to constraint locators so that
+            targets' animations are kept the same after constraints are made.
+        start: int
+            Start frame of keyframe bake.
+        end: int
+            End frame of keyframe bake.
+
+    Return value
+        A list of constraint locaros, which are created to constrain the
+        target nodes. list of PyNode
+
+    Description:
+        Creates a new locator under parent as the constraint locator and
+        constraint nodes which drive each target node according to
+        translate_switches and rotate_switches channel settings.  
+        If bake is True, keyframes are baked to each constraint locator
+        so that each target's animation is kept the same after constraints
+        are made.
+        As parameter targets, several argument types can be accepted and
+        if None is specified, current selected nodes are considered as
+        targets.
+    """
+
     _targets = None
     if targets is None:
         selections = ls(selection=1)
@@ -433,6 +638,42 @@ def switch_space(targets, parent, translate_switches=[True, True, True], rotate_
 
 
 def delete_switch_space_constraints(targets=None, locators=None, bake=False, start=None, end=None):
+    """
+    Parameters:
+        targets: list of PyNode or PyNode or list of unicode or unicode or
+                 NoneType
+            Target transform node(s).
+        locators: list of PyNode or PyNode or list of unicode or unicode or
+                  NoneType
+            Constraint locator node(s).
+        bake: bool
+            If True, the resultant animation is baked to the target node
+            before constraints are deleted.
+        start: NoneType or int
+            Start frame of keyframe bake. If None is specified, start frame is
+            obtained from the value stored in locator's custom attribute.
+            A specific integer value can be used to override the start frame
+            stored as custom attribute.
+        end: NoneType or int
+            End frame of keyframe bake. If `None` is specified, end frame is
+            obtained from the value stored in locator's custom attribute.
+            A specific integer value can be used to override the end frame
+            stored as custom attribute.
+
+    Return value:
+        A list of target nodes. list of PyNode
+
+    Description:
+        Deletes the specified constraint locator nodes and their constraint
+        nodes.
+        Constraint locator nodes can be obtained by specifying target nodes
+        also.
+        If both targets and locators is None, constraint locators are obtained
+        from current selection.
+        If bake is True, the resultant animation is baked to each target node
+        before constraint structure is deleted.
+    """
+
     _locators = []
     if targets is None and locators is None:
         selections = ls(selection=1)

@@ -20,6 +20,17 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Documentation
+
+Portal module for main class and functions, designed to be the interface, i.e.
+the only module that the users of this tool need to import.
+Their actual implementation is split into sub modules below:
+
+spaceswitcher.core
+spaceswitcher.ui
+spaceswitcher.utils
+
 """
 
 
